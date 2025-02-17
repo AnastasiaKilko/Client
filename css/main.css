@@ -74,6 +74,11 @@ button:hover {
     background-color: #d8d8d8;
 }
 
+.disabledButton:hover {
+    cursor: auto;
+    background-color: #d8d8d8;
+}
+
 .review-form {
     width: 400px;
     padding: 20px;

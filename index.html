@@ -21,26 +21,37 @@ initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
             <div class="product-info">
                 <h1>{{ product }}</h1>
                 <p>{{ description }}</p>
-                <p v-if="inventory > 10">In stock <span v-show="onSale">On sale</span></p>
-                <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out! <span v-show="onSale">On sale</span></p>
-                <p v-else>Out of stock <span v-show="onSale">On sale</span></p>
+                <p v-if="inStock && inventory > 10">In stock <span v-show="onSale">On sale</span></p>
+                <p v-else-if="inStock && inventory <= 10 && inventory > 0">Almost sold out! <span v-show="onSale">On sale</span></p>
+                <p v-else>
+                    Out of stock 
+                </p>
                 <ul>
                     <li v-for="detail in details">{{ detail }}</li>
                 </ul>
-                <div v-for="variant in variants" :key="variant.variantId">
-                    <p @mouseover="updateProduct (variant.variantImage) ">
-                        {{ variant.variantColor }}
-                    </p>
+                <div 
+                    class="color-box"
+                    v-for="variant in variants" 
+                    :key="variant.variantId"
+                    :style="{ backgroundColor:variant.variantColor }"
+                    @mouseover="updateProduct (variant.variantImage) "
+                >
                 </div>
                 <ul>
                     <li v-for="size in sizes">{{ size }}</li>
                 </ul>
-                <div class="cart-buttons">
-                    <button v-on:click="addToCart">Add to cart</button>
-                    <button v-on:click="removeFromCart">Remove from cart</button>
-                </div>
                 <div class="cart">
                     <p>Cart({{ cart }})</p>
+                </div>
+                <div class="cart-buttons">
+                    <button 
+                        v-on:click="addToCart"
+                        :disabled="!inStock"
+                        :class="{ disabledButton: !inStock }"
+                    >
+                        Add to cart
+                    </button>
+                    <button v-on:click="removeFromCart">Remove from cart</button>
                 </div>
             </div>
         </div>
