@@ -23,7 +23,12 @@ initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
                 <p>{{ description }}</p>
                 <p v-if="inStock && inventory > 10">In stock <span v-show="onSale">On sale</span></p>
                 <p v-else-if="inStock && inventory <= 10 && inventory > 0">Almost sold out! <span v-show="onSale">On sale</span></p>
-                <p v-else>
+                <p v-else
+                   class="out-of-stock"
+                   :style="{ textDecoration:line-through }"
+                >
+<!--                   как сделать стиль??-->
+
                     Out of stock 
                 </p>
                 <ul>
@@ -51,7 +56,13 @@ initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
                     >
                         Add to cart
                     </button>
-                    <button v-on:click="removeFromCart">Remove from cart</button>
+                    <button
+                            v-on:click="removeFromCart"
+                            :disabled="!inStock || cart <= 0"
+                            :class="{ disabledButton: !inStock || cart <= 0 }"
+                    >
+                        Remove from cart
+                    </button>
                 </div>
             </div>
         </div>
