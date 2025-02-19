@@ -13,7 +13,15 @@ initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 </head>
 <body>
 <div id="app">
-    <product :premium="premium"></product>
+    <div class="cart">
+        <p>Cart({{ cart.length }})</p>
+    </div>
+    <product :premium="premium"
+             :cart="cart"
+             @add-to-cart="updateCart"
+             @remove-from-cart="rollbackCart"
+    >
+    </product>
 </div>
 </body>
 </html>
