@@ -1,3 +1,6 @@
+let eventBus = new Vue();
+
+
 Vue.component('product-tabs', {
     props: {
         reviews: {
@@ -14,25 +17,26 @@ Vue.component('product-tabs', {
                 @click="selectedTab = tab" 
             >{{ tab }}</span>
         </ul>
-        <div>
+        <div v-show="selectedTab === 'Reviews'">
             <p v-if="!reviews.length">There are no reviews yet.</p>
             <ul>
                 <li v-for="review in reviews">
                 <p>{{ review.name }}</p>
                 <p>Rating: {{ review.rating }}</p>
                 <p>{{ review.review }}</p>
+                <p>Recommendation: {{ review.recommendation }}</p>
                 </li>
             </ul>
         </div>
-        <div>
-        <product-review @review-submitted="addReview"></product-review>
+        <div v-show="selectedTab === 'Make a Review'">
+        <product-review></product-review>
         </div>  
     </div>
     `,
     data() {
         return {
             tabs: ['Reviews', 'Make a Review'],
-            selectedTab: 'Reviews'
+            selectedTab: 'Reviews',
         }
     }
 })
@@ -93,7 +97,7 @@ Vue.component('product-review', {
                     rating: this.rating,
                     recommendation: this.recommendation,
                 }
-                this.$emit('review-submitted', productReview)
+                eventBus.$emit('review-submitted', productReview)
                 this.name = null
                 this.review = null
                 this.rating = null
@@ -182,7 +186,6 @@ Vue.component('product', {
             </div>
         </div>
         <product-tabs :reviews="reviews"></product-tabs>
-        
     </div>
     `,
     data() {
@@ -225,10 +228,8 @@ Vue.component('product', {
         updateProduct(index) {
             this.selectedVariant = index;
             console.log(index);
-        },
-        addReview(productReview) {
-            this.reviews.push(productReview);
         }
+
     },
     computed: {
         title() {
@@ -253,6 +254,11 @@ Vue.component('product', {
                 return 2.99
             }
         }
+    },
+    mounted() {
+        eventBus.$on('review-submitted', productReview => {
+            this.reviews.push(productReview)
+        })
     }
 })
 
