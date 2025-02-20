@@ -1,6 +1,53 @@
 let eventBus = new Vue();
 
 
+Vue.component('info-tabs', {
+    props: {
+        details: {
+            type: Array,
+            required: true
+        },
+        sizes: {
+            type: Array,
+            required: true
+        },
+        shipping: {
+            required: true
+        }
+    },
+    template: `
+    <div>
+        <ul>
+            <span class="tab"
+                :class="{ activeTab: selectedTab === tab }" 
+                v-for="(tab, index) in tabs"
+                @click="selectedTab = tab"
+            >{{ tab }}</span>
+        </ul>
+        <div v-show="selectedTab === 'Details'">
+            <ul>
+                <li v-for="detail in details">{{ detail }}</li>
+            </ul>
+        </div>
+        <div v-show="selectedTab === 'Sizes'">
+            <ul>
+                <li v-for="size in sizes">{{ size }}</li>
+            </ul>
+        </div>
+        <div v-show="selectedTab === 'Shipping'">
+            <p>{{ shipping }}</p>
+        </div>
+    </div>
+    `,
+    data() {
+        return {
+            tabs: ['Details', 'Sizes', 'Shipping'],
+            selectedTab: 'Details'
+        }
+    }
+})
+
+
 Vue.component('product-tabs', {
     props: {
         reviews: {
@@ -154,8 +201,9 @@ Vue.component('product', {
                 Out of stock
             </p>
             <p>{{ sale }}</p>
-            <product-details :details="details"></product-details>
-            <p>Shipping: {{ shipping }}</p>
+            
+            <info-tabs :details="details" :sizes="sizes" :shipping="shipping"></info-tabs>
+            
             <div
                     class="color-box"
                     v-for="(variant, index) in variants"
@@ -164,10 +212,7 @@ Vue.component('product', {
                     @mouseover="updateProduct (index) "
             >
             </div>
-            <ul>
-                <li v-for="size in sizes">{{ size }}</li>
-            </ul>
-            
+                    
             <div class="cart-buttons">
                 <button
                         v-on:click="addToCart"
